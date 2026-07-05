@@ -69,7 +69,7 @@ class EventController extends Controller
             'registration_opens_at' => ['required', 'date'],
             'registration_closes_at' => ['required', 'date', 'after:registration_opens_at'],
             'is_active' => ['boolean'],
-            'cover_photo' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
+            'cover_photo' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:5048'],
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
@@ -152,7 +152,7 @@ class EventController extends Controller
             'registration_opens_at' => ['required', 'date'],
             'registration_closes_at' => ['required', 'date', 'after:registration_opens_at'],
             'is_active' => ['boolean'],
-            'cover_photo' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
+            'cover_photo' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:5048'],
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
