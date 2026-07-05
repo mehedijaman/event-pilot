@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Inertia\Response;
 
@@ -74,7 +75,7 @@ class EventController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->boolean('is_active');
 
-        $event = Event::create($validated);
+        $event = Event::create(Arr::except($validated, ['cover_photo']));
 
         if ($request->hasFile('cover_photo')) {
             $event->addMediaFromRequest('cover_photo')->toMediaCollection('cover');
@@ -157,7 +158,7 @@ class EventController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->boolean('is_active');
 
-        $event->update($validated);
+        $event->update(Arr::except($validated, ['cover_photo']));
 
         if ($request->hasFile('cover_photo')) {
             $event->clearMediaCollection('cover');
