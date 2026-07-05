@@ -7,6 +7,7 @@ use App\Enums\SeatPosition;
 use App\Events\RegistrationCreated;
 use App\Http\Requests\StoreRegistrationRequest;
 use App\Models\Event;
+use App\Models\PaymentMethod;
 use App\Models\Registration;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -21,8 +22,13 @@ class RegistrationController extends Controller
             ->with('packages')
             ->firstOrFail();
 
+        $paymentMethods = PaymentMethod::where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'account_type', 'account_number', 'instructions']);
+
         return inertia('Register', [
             'event' => $event,
+            'paymentMethods' => $paymentMethods,
         ]);
     }
 

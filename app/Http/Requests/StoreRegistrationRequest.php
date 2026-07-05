@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\PaymentMethod;
 use App\Enums\SeatPosition;
 use App\Models\Package;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,7 +27,7 @@ class StoreRegistrationRequest extends FormRequest
                 'nullable', 'string', 'max:100',
             ],
             'institution_name' => ['nullable', 'string', 'max:255'],
-            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
+            'payment_method' => ['required', 'string', 'exists:payment_methods,slug,is_active,1'],
             'transaction_id' => [
                 'required', 'string', 'max:255',
                 Rule::unique('registrations')

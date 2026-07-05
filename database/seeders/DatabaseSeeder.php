@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\StaffRole;
 use App\Models\Event;
 use App\Models\Package;
+use App\Models\PaymentMethod;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -77,6 +78,60 @@ class DatabaseSeeder extends Seeder
             'social_facebook' => 'https://facebook.com/event',
             'social_twitter' => 'https://twitter.com/event',
             'social_instagram' => 'https://instagram.com/event',
+        ]);
+
+        PaymentMethod::create([
+            'name' => 'bKash',
+            'slug' => 'bkash',
+            'account_type' => 'mobile',
+            'account_number' => '01XXXXXXXXX',
+            'instructions' => 'Send Money to the number above. After payment, enter your bKash transaction ID in the form.',
+            'is_active' => true,
+        ]);
+
+        PaymentMethod::create([
+            'name' => 'Nagad',
+            'slug' => 'nagad',
+            'account_type' => 'mobile',
+            'account_number' => '01XXXXXXXXX',
+            'instructions' => 'Send Money to the number above. After payment, enter your Nagad transaction ID in the form.',
+            'is_active' => true,
+        ]);
+
+        PaymentMethod::create([
+            'name' => 'Rocket',
+            'slug' => 'rocket',
+            'account_type' => 'mobile',
+            'account_number' => '01XXXXXXXXX',
+            'instructions' => 'Send Money to the number above. After payment, enter your Rocket transaction ID in the form.',
+            'is_active' => true,
+        ]);
+
+        PaymentMethod::create([
+            'name' => 'Upay',
+            'slug' => 'upay',
+            'account_type' => 'mobile',
+            'account_number' => '01XXXXXXXXX',
+            'instructions' => 'Send Money to the number above. After payment, enter your Upay transaction ID in the form.',
+            'is_active' => true,
+        ]);
+
+        PaymentMethod::create([
+            'name' => 'Bank Transfer',
+            'slug' => 'bank_transfer',
+            'account_type' => 'bank',
+            'account_number' => 'Account Name: XXXXX, A/C No: XXXX-XXXX-XXXX, Bank: XXXXX, Branch: XXXXX, Routing No: XXXXXXXX',
+            'instructions' => 'Transfer the exact amount to the account above. After payment, enter your transaction reference or receipt number in the form.',
+            'is_active' => true,
+        ]);
+
+        PaymentMethod::create([
+            'name' => 'Cash Payment',
+            'slug' => 'cash',
+            'account_type' => null,
+            'account_number' => null,
+            'instructions' => 'Pay in cash at the event registration desk. Bring your registration confirmation.',
+            'is_active' => true,
         ]);
 
         $this->command?->info('Admin login: admin@event.test / password');

@@ -19,6 +19,14 @@ const props = defineProps<{
             description: string | null;
         }>;
     };
+    paymentMethods: Array<{
+        id: number;
+        name: string;
+        slug: string;
+        account_type: string | null;
+        account_number: string | null;
+        instructions: string | null;
+    }>;
 }>();
 
 const step = ref(1);
@@ -45,14 +53,6 @@ const requiresStudentId = computed(() =>
     selectedPackage.value?.requires_student_verification ?? false
 );
 
-const paymentMethods = [
-    { value: 'bkash', label: 'bKash' },
-    { value: 'nagad', label: 'Nagad' },
-    { value: 'rocket', label: 'Rocket' },
-    { value: 'bank', label: 'Bank Transfer' },
-    { value: 'other', label: 'Other' },
-];
-
 function selectPackage(id: number) {
     form.package_id = id;
     form.clearErrors('package_id');
@@ -66,8 +66,8 @@ function selectSeat(position: string) {
 }
 
 function goToForm() {
-    if (!form.payment_method) {
-        form.payment_method = 'bkash';
+    if (!form.payment_method && props.paymentMethods.length > 0) {
+        form.payment_method = props.paymentMethods[0].slug;
     }
     step.value = 4;
 }
@@ -181,17 +181,19 @@ function submit() {
                     <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
                         Please send the exact amount to one of the following accounts, then enter the details in the next step.
                     </p>
-                    <div class="rounded-md border border-[#e3e3e0] p-4 dark:border-[#3E3E3A]">
-                        <h3 class="font-medium">bKash</h3>
-                        <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">Send Money to: <strong class="text-[#1b1b18] dark:text-[#EDEDEC]">01XXXXXXXXX</strong></p>
-                    </div>
-                    <div class="rounded-md border border-[#e3e3e0] p-4 dark:border-[#3E3E3A]">
-                        <h3 class="font-medium">Nagad</h3>
-                        <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">Send Money to: <strong class="text-[#1b1b18] dark:text-[#EDEDEC]">01XXXXXXXXX</strong></p>
-                    </div>
-                    <div class="rounded-md border border-[#e3e3e0] p-4 dark:border-[#3E3E3A]">
-                        <h3 class="font-medium">Bank Transfer</h3>
-                        <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">Account: XXXX-XXXX-XXXX (Bank Name)</p>
+                    <div
+                        v-for="method in paymentMethods"
+                        :key="method.id"
+                        class="rounded-md border border-[#e3e3e0] p-4 dark:border-[#3E3E3A]"
+                    >
+                        <h3 class="font-medium">{{ method.name }}</h3>
+                        <p v-if="method.account_number" class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                            {{ method.account_type === 'bank' ? 'Account' : 'Send Money to' }}:
+                            <strong class="text-[#1b1b18] dark:text-[#EDEDEC]">{{ method.account_number }}</strong>
+                        </p>
+                        <p v-if="method.instructions" class="mt-1 text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                            {{ method.instructions }}
+                        </p>
                     </div>
                     <div class="pt-2">
                         <p class="mb-3 text-sm font-medium">
@@ -285,8 +287,8 @@ function submit() {
                                 :class="{ 'border-red-500': form.errors.payment_method }"
                             >
                                 <option value="" disabled>Select method</option>
-                                <option v-for="m in paymentMethods" :key="m.value" :value="m.value">
-                                    {{ m.label }}
+                                <option v-for="m in paymentMethods" :key="m.id" :value="m.slug">
+                                    {{ m.name }}
                                 </option>
                             </select>
                             <div v-if="form.errors.payment_method" class="mt-1 text-sm text-red-600">{{ form.errors.payment_method }}</div>

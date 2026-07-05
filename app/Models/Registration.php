@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\SeatPosition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,7 +20,6 @@ class Registration extends Model
     {
         return [
             'seat_position' => SeatPosition::class,
-            'payment_method' => PaymentMethod::class,
             'payment_status' => PaymentStatus::class,
             'amount' => 'decimal:2',
             'verified_at' => 'datetime',

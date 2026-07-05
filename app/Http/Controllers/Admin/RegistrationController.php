@@ -28,7 +28,7 @@ class RegistrationController extends Controller
                 'email' => $r->email,
                 'phone' => $r->phone,
                 'seat_position' => $r->seat_position->value,
-                'payment_method' => $r->payment_method->value,
+                'payment_method' => $r->payment_method,
                 'transaction_id' => $r->transaction_id,
                 'amount' => $r->amount,
                 'payment_status' => $r->payment_status->value,

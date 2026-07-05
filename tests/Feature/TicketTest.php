@@ -4,11 +4,14 @@ use App\Events\RegistrationCreated;
 use App\Mail\TicketMail;
 use App\Models\Event;
 use App\Models\Package;
+use App\Models\PaymentMethod;
 use App\Models\Registration;
 use Illuminate\Support\Facades\Event as EventFacade;
 use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
+    PaymentMethod::create(['name' => 'bKash', 'slug' => 'bkash', 'account_type' => 'mobile', 'account_number' => '01XXXXXXXXX', 'is_active' => true]);
+
     $this->event = Event::factory()->create([
         'is_active' => true,
         'indoor_capacity' => 100,

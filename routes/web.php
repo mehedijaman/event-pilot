@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CheckInController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\RegistrationController as AdminRegistrationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\PublicController;
@@ -22,6 +23,7 @@ Route::post('/tickets/resend', [TicketController::class, 'resend'])
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     Route::resource('events', EventController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('payment-methods', PaymentMethodController::class)->except(['show']);
     Route::get('registrations', [AdminRegistrationController::class, 'index'])->name('registrations.index');
     Route::post('registrations/{registration}/verify', [AdminRegistrationController::class, 'verify'])->name('registrations.verify');
     Route::post('registrations/{registration}/reject', [AdminRegistrationController::class, 'reject'])->name('registrations.reject');

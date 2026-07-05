@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Calendar, FolderGit2, LayoutGrid, ListChecks, ScanQrCode, Settings } from '@lucide/vue';
+import { BookOpen, Calendar, CreditCard, FolderGit2, LayoutGrid, ListChecks, ScanQrCode, Settings } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -38,6 +38,11 @@ const mainNavItems: NavItem[] = [
         title: 'Check-In',
         href: admin.checkIn.index(),
         icon: ScanQrCode,
+    },
+    {
+        title: 'Payment Methods',
+        href: admin.paymentMethods.index(),
+        icon: CreditCard,
     },
     {
         title: 'Settings',
@@ -79,7 +84,7 @@ const footerNavItems: NavItem[] = [
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
+            <!-- <NavFooter :items="footerNavItems" /> -->
             <NavUser />
         </SidebarFooter>
     </Sidebar>
