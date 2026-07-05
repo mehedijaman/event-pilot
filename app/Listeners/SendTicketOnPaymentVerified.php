@@ -3,14 +3,14 @@
 namespace App\Listeners;
 
 use App\Actions\TicketPdf;
-use App\Events\RegistrationCreated;
+use App\Events\PaymentVerified;
 use App\Mail\TicketMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 
-class GenerateTicketAndSendEmail implements ShouldQueue
+class SendTicketOnPaymentVerified implements ShouldQueue
 {
-    public function handle(RegistrationCreated $event): void
+    public function handle(PaymentVerified $event): void
     {
         $registration = $event->registration;
 

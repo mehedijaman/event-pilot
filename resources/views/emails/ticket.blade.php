@@ -38,12 +38,12 @@
                 <dd style="text-transform: capitalize">{{ $registration->seat_position->value }}</dd>
 
                 <dt>Status</dt>
-                <dd><span class="status">Pending Verification</span></dd>
+                <dd><span class="status" style="background: #d1fae5; color: #065f46;">Verified</span></dd>
             </dl>
         </div>
 
         <p style="font-size: 14px;">
-            Your payment is being verified. You will receive another email once it has been confirmed.
+            Your payment has been verified. Please find your ticket attached to this email.
         </p>
 
         @if ($registration->event->venue)

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\PaymentStatus;
 use App\Enums\SeatPosition;
-use App\Events\RegistrationCreated;
 use App\Http\Requests\StoreRegistrationRequest;
 use App\Models\Event;
 use App\Models\PaymentMethod;
@@ -59,8 +58,6 @@ class RegistrationController extends Controller
 
             return Registration::create($validated);
         });
-
-        RegistrationCreated::dispatch($registration);
 
         return redirect()->route('tickets.show', $registration->ticket_code);
     }

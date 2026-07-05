@@ -1,12 +1,12 @@
 <?php
 
-use App\Events\RegistrationCreated;
+use App\Enums\PaymentStatus;
 use App\Mail\TicketMail;
 use App\Models\Event;
 use App\Models\Package;
 use App\Models\PaymentMethod;
 use App\Models\Registration;
-use Illuminate\Support\Facades\Event as EventFacade;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
@@ -27,51 +27,27 @@ beforeEach(function () {
     ]);
 });
 
-it('dispatches RegistrationCreated event directly', function () {
-    $registration = Registration::factory()->make([
-        'event_id' => $this->event->id,
-        'package_id' => $this->package->id,
-    ]);
-
-    EventFacade::fakeFor(function () use ($registration) {
-        RegistrationCreated::dispatch($registration);
-        EventFacade::assertDispatched(RegistrationCreated::class);
-    });
-});
-
-it('sends ticket email on registration', function () {
+it('sends ticket email on payment verification', function () {
     Mail::fake();
 
-    $this->post(route('register.store'), [
+    $admin = User::factory()->create(['role' => 'admin']);
+    $registration = Registration::factory()->create([
+        'event_id' => $this->event->id,
         'package_id' => $this->package->id,
-        'seat_position' => 'indoor',
-        'name' => 'Test User',
         'email' => 'test@example.com',
-        'phone' => '01712345678',
-        'payment_method' => 'bkash',
-        'transaction_id' => 'TXN123',
-        'amount' => 500,
+        'payment_status' => PaymentStatus::Pending,
     ]);
+
+    $this->actingAs($admin)
+        ->post(route('admin.registrations.verify', $registration));
 
     Mail::assertSent(TicketMail::class, function ($mail) {
         return $mail->hasTo('test@example.com');
     });
-});
 
-it('updates ticket_email_sent_at on registration', function () {
-    $this->post(route('register.store'), [
-        'package_id' => $this->package->id,
-        'seat_position' => 'indoor',
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'phone' => '01712345678',
-        'payment_method' => 'bkash',
-        'transaction_id' => 'TXN456',
-        'amount' => 500,
-    ]);
-
-    $registration = Registration::first();
+    $registration->refresh();
     expect($registration->ticket_email_sent_at)->not->toBeNull();
+    expect($registration->payment_status)->toBe(PaymentStatus::Verified);
 });
 
 it('sends ticket email via resend endpoint', function () {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\PaymentStatus;
+use App\Events\PaymentVerified;
 use App\Http\Controllers\Controller;
 use App\Models\Registration;
 use Illuminate\Http\RedirectResponse;
@@ -62,6 +63,8 @@ class RegistrationController extends Controller
             'verified_by' => request()->user()->id,
             'verified_at' => now(),
         ]);
+
+        PaymentVerified::dispatch($registration);
 
         return back()->with('success', 'Registration verified successfully.');
     }

@@ -35,49 +35,60 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $event = Event::create([
-            'name' => 'Annual Tech Conference 2026',
-            'slug' => 'annual-tech-conference-2026',
-            'description' => 'A premier technology conference featuring keynote speakers, workshops, and networking opportunities.',
-            'event_date' => now()->addMonths(2),
-            'venue' => 'Dhaka International Convention Center',
-            'indoor_capacity' => 200,
-            'outdoor_capacity' => 100,
+            'name' => 'FIFA World Cup 2026 - Live Match Viewing',
+            'slug' => 'fifa-world-cup-2026-live-match',
+            'description' => 'Experience the thrill of the FIFA World Cup 2026 on the big screen! Join thousands of football fans for a live match screening with surround sound, live commentary, and an electrifying stadium atmosphere. Food and beverages available on-site.',
+            'event_date' => '2026-07-19 20:00:00',
+            'venue' => 'Bashundhara Kings Arena, Dhaka',
+            'indoor_capacity' => 500,
+            'outdoor_capacity' => 300,
             'registration_opens_at' => now()->subDay(),
-            'registration_closes_at' => now()->addMonth(),
+            'registration_closes_at' => now()->addMonths(2),
             'is_active' => true,
         ]);
 
         Package::create([
             'event_id' => $event->id,
-            'name' => 'Student Package',
-            'slug' => 'student',
+            'name' => 'General Stand',
+            'slug' => 'general-stand',
             'price' => 500.00,
-            'requires_student_verification' => true,
-            'description' => 'Discounted entry for students with valid student ID.',
+            'requires_student_verification' => false,
+            'description' => 'Open-air outdoor seating with big screen viewing.',
             'is_active' => true,
             'sort_order' => 0,
         ]);
 
         Package::create([
             'event_id' => $event->id,
-            'name' => 'Normal Package',
-            'slug' => 'normal',
-            'price' => 1000.00,
+            'name' => 'VIP Lounge',
+            'slug' => 'vip-lounge',
+            'price' => 1500.00,
             'requires_student_verification' => false,
-            'description' => 'General admission for all attendees.',
+            'description' => 'Air-conditioned indoor seating with premium view, complimentary snacks and beverages.',
             'is_active' => true,
             'sort_order' => 1,
         ]);
 
+        Package::create([
+            'event_id' => $event->id,
+            'name' => 'Student Pass',
+            'slug' => 'student-pass',
+            'price' => 300.00,
+            'requires_student_verification' => true,
+            'description' => 'Discounted entry for students. Valid student ID required at entry.',
+            'is_active' => true,
+            'sort_order' => 2,
+        ]);
+
         Setting::create([
-            'site_name' => 'Event Ticket',
-            'slogan' => 'Your Gateway to Amazing Events',
-            'contact_email' => 'hello@event.test',
+            'site_name' => 'Match Day Live',
+            'slogan' => 'Feel the roar of the World Cup',
+            'contact_email' => 'info@matchdaylive.test',
             'contact_phone' => '+8801700000000',
-            'contact_address' => 'Dhaka, Bangladesh',
-            'social_facebook' => 'https://facebook.com/event',
-            'social_twitter' => 'https://twitter.com/event',
-            'social_instagram' => 'https://instagram.com/event',
+            'contact_address' => 'Bashundhara Kings Arena, Dhaka, Bangladesh',
+            'social_facebook' => 'https://facebook.com/matchdaylive',
+            'social_twitter' => 'https://twitter.com/matchdaylive',
+            'social_instagram' => 'https://instagram.com/matchdaylive',
         ]);
 
         PaymentMethod::create([
