@@ -22,7 +22,7 @@ const form = ref({
     account_type: props.paymentMethod.account_type ?? '',
     account_number: props.paymentMethod.account_number ?? '',
     instructions: props.paymentMethod.instructions ?? '',
-    is_active: props.paymentMethod.is_active,
+    is_active: Boolean(props.paymentMethod.is_active),
 });
 const saving = ref(false);
 const errors = ref<Record<string, string>>({});
