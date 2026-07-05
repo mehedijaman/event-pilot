@@ -26,6 +26,7 @@ const props = defineProps<{
             payment_method: string;
             transaction_id: string;
             amount: number;
+            quantity: number;
             payment_status: string;
             rejection_reason: string | null;
             verified_at: string | null;
@@ -133,6 +134,7 @@ function formatDate(date: string | null): string {
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Name</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Contact</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Package</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Qty</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Seat</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Payment</th>
                         <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Amount</th>
@@ -152,6 +154,7 @@ function formatDate(date: string | null): string {
                             <div class="text-xs text-muted-foreground">{{ r.phone }}</div>
                         </td>
                         <td class="whitespace-nowrap px-4 py-3 text-sm">{{ r.package.name }}</td>
+                        <td class="whitespace-nowrap px-4 py-3 text-sm">{{ r.quantity }}</td>
                         <td class="whitespace-nowrap px-4 py-3 text-sm capitalize">{{ r.seat_position }}</td>
                         <td class="whitespace-nowrap px-4 py-3 text-sm">
                             <div class="capitalize">{{ r.payment_method }}</div>
@@ -179,7 +182,7 @@ function formatDate(date: string | null): string {
                         </td>
                     </tr>
                     <tr v-if="registrations.data.length === 0">
-                        <td colspan="9" class="px-4 py-12 text-center text-sm text-muted-foreground">
+                        <td colspan="10" class="px-4 py-12 text-center text-sm text-muted-foreground">
                             No registrations found.
                         </td>
                     </tr>

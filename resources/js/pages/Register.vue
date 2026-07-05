@@ -27,13 +27,15 @@ const props = defineProps<{
         account_number: string | null;
         instructions: string | null;
     }>;
+    maxQuantity: number;
 }>();
 
 const step = ref(1);
-const totalSteps = 4;
+const totalSteps = 5;
 
 const form = useForm({
     package_id: 0,
+    quantity: 1,
     seat_position: '',
     name: '',
     email: '',
@@ -53,23 +55,38 @@ const requiresStudentId = computed(() =>
     selectedPackage.value?.requires_student_verification ?? false
 );
 
+const totalAmount = computed(() =>
+    (selectedPackage.value?.price ?? 0) * form.quantity
+);
+
+const quantityOptions = computed(() =>
+    Array.from({ length: props.maxQuantity }, (_, i) => i + 1)
+);
+
 function selectPackage(id: number) {
     form.package_id = id;
     form.clearErrors('package_id');
     step.value = 2;
 }
 
+function selectQuantity(qty: number) {
+    form.quantity = qty;
+    form.amount = String(totalAmount.value);
+    step.value = 3;
+}
+
 function selectSeat(position: string) {
     form.seat_position = position;
     form.clearErrors('seat_position');
-    step.value = 3;
+    step.value = 4;
 }
 
 function goToForm() {
     if (!form.payment_method && props.paymentMethods.length > 0) {
         form.payment_method = props.paymentMethods[0].slug;
     }
-    step.value = 4;
+    form.amount = String(totalAmount.value);
+    step.value = 5;
 }
 
 function goBack() {
@@ -130,8 +147,42 @@ function submit() {
                     </button>
                 </div>
 
-                <!-- Step 2: Seat Position -->
+                <!-- Step 2: Quantity Selection -->
                 <div v-if="step === 2" class="space-y-3">
+                    <h2 class="text-lg font-medium">Select Quantity</h2>
+                    <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                        How many tickets do you need?
+                    </p>
+                    <div v-if="form.errors.quantity" class="text-sm text-red-600">{{ form.errors.quantity }}</div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button
+                            v-for="qty in quantityOptions"
+                            :key="qty"
+                            type="button"
+                            class="rounded-md border border-[#e3e3e0] p-4 text-center transition hover:border-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#EDEDEC]"
+                            :class="{ 'border-[#1b1b18] dark:border-[#EDEDEC]': form.quantity === qty }"
+                            @click="selectQuantity(qty)"
+                        >
+                            <span class="text-lg font-semibold">{{ qty }}</span>
+                        </button>
+                    </div>
+                    <div class="pt-2">
+                        <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                            Total: <strong class="text-[#1b1b18] dark:text-[#EDEDEC]">৳{{ totalAmount }}</strong>
+                            <span v-if="form.quantity > 1" class="text-xs"> (৳{{ selectedPackage?.price }} × {{ form.quantity }})</span>
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        class="text-sm text-[#706f6c] underline underline-offset-4 hover:text-[#1b1b18] dark:hover:text-[#EDEDEC]"
+                        @click="goBack"
+                    >
+                        Back to packages
+                    </button>
+                </div>
+
+                <!-- Step 3: Seat Position -->
+                <div v-if="step === 3" class="space-y-3">
                     <h2 class="text-lg font-medium">Select Seat Position</h2>
                     <div v-if="form.errors.seat_position" class="text-sm text-red-600">{{ form.errors.seat_position }}</div>
                     <button
@@ -171,12 +222,12 @@ function submit() {
                         class="text-sm text-[#706f6c] underline underline-offset-4 hover:text-[#1b1b18] dark:hover:text-[#EDEDEC]"
                         @click="goBack"
                     >
-                        Back to packages
+                        Back to quantity
                     </button>
                 </div>
 
-                <!-- Step 3: Payment Instructions -->
-                <div v-if="step === 3" class="space-y-3">
+                <!-- Step 4: Payment Instructions -->
+                <div v-if="step === 4" class="space-y-3">
                     <h2 class="text-lg font-medium">Payment Instructions</h2>
                     <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
                         Please send the exact amount to one of the following accounts, then enter the details in the next step.
@@ -196,8 +247,11 @@ function submit() {
                         </p>
                     </div>
                     <div class="pt-2">
-                        <p class="mb-3 text-sm font-medium">
-                            Amount to pay: <strong>৳{{ selectedPackage?.price ?? 0 }}</strong>
+                        <p class="mb-1 text-sm font-medium">
+                            {{ form.quantity }} × ৳{{ selectedPackage?.price ?? 0 }}
+                        </p>
+                        <p class="mb-3 text-sm font-semibold">
+                            Amount to pay: <strong>৳{{ totalAmount }}</strong>
                         </p>
                         <div class="flex gap-2">
                             <button
@@ -218,10 +272,16 @@ function submit() {
                     </div>
                 </div>
 
-                <!-- Step 4: Details Form -->
-                <div v-if="step === 4">
+                <!-- Step 5: Details Form -->
+                <div v-if="step === 5">
                     <form @submit.prevent="submit" class="space-y-4">
                         <h2 class="text-lg font-medium">Your Details</h2>
+
+                        <div class="rounded-md border border-[#e3e3e0] p-3 dark:border-[#3E3E3A]">
+                            <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                                {{ form.quantity }} × {{ selectedPackage?.name }} — <strong class="text-[#1b1b18] dark:text-[#EDEDEC]">৳{{ totalAmount }}</strong>
+                            </p>
+                        </div>
 
                         <div>
                             <label class="block text-sm font-medium">Full Name</label>
@@ -311,7 +371,8 @@ function submit() {
                                 v-model="form.amount"
                                 type="number"
                                 step="0.01"
-                                class="mt-1 w-full rounded-sm border border-[#e3e3e0] bg-transparent px-3 py-2 text-sm outline-none focus:border-[#1b1b18] dark:border-[#3E3E3A] dark:focus:border-[#EDEDEC]"
+                                readonly
+                                class="mt-1 w-full rounded-sm border border-[#e3e3e0] bg-[#f9f9f8] px-3 py-2 text-sm outline-none dark:border-[#3E3E3A] dark:bg-[#1C1C1A]"
                                 :class="{ 'border-red-500': form.errors.amount }"
                             />
                             <div v-if="form.errors.amount" class="mt-1 text-sm text-red-600">{{ form.errors.amount }}</div>
@@ -324,7 +385,7 @@ function submit() {
                             <button
                                 type="button"
                                 class="rounded-sm border border-[#706f6c] px-4 py-1.5 text-sm transition hover:border-[#1b1b18] dark:hover:border-[#EDEDEC]"
-                                @click="step = 3"
+                                @click="step = 4"
                             >
                                 Back
                             </button>
@@ -339,7 +400,7 @@ function submit() {
                     </form>
                 </div>
 
-                <div v-if="form.hasErrors && step < 4" class="mt-4 text-sm text-red-600">
+                <div v-if="form.hasErrors && step < 5" class="mt-4 text-sm text-red-600">
                     Please review and complete all previous steps.
                 </div>
             </main>

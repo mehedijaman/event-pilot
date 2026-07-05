@@ -23,8 +23,9 @@ const props = defineProps<{
         seat_position: string;
         payment_status: string;
         checked_in_at: string | null;
+        quantity: number;
         event: { name: string };
-        package: { name: string };
+        package: { name: string; price: number };
     } | null;
 }>();
 
@@ -134,6 +135,10 @@ function checkInStatus(): string {
                 <div class="flex justify-between">
                     <dt class="text-muted-foreground">Package</dt>
                     <dd>{{ lookup.package.name }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-muted-foreground">Quantity</dt>
+                    <dd>{{ lookup.quantity }}</dd>
                 </div>
                 <div class="flex justify-between">
                     <dt class="text-muted-foreground">Seat</dt>

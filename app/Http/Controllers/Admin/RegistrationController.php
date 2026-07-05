@@ -32,6 +32,7 @@ class RegistrationController extends Controller
                 'payment_method' => $r->payment_method,
                 'transaction_id' => $r->transaction_id,
                 'amount' => $r->amount,
+                'quantity' => $r->quantity,
                 'payment_status' => $r->payment_status->value,
                 'rejection_reason' => $r->rejection_reason,
                 'verified_at' => $r->verified_at,

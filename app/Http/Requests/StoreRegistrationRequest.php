@@ -18,6 +18,7 @@ class StoreRegistrationRequest extends FormRequest
     {
         return [
             'package_id' => ['required', 'exists:packages,id,is_active,1'],
+            'quantity' => ['required', 'integer', 'in:1,2,3,4,5,6'],
             'seat_position' => ['required', Rule::enum(SeatPosition::class)],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
@@ -36,5 +37,29 @@ class StoreRegistrationRequest extends FormRequest
             ],
             'amount' => ['required', 'numeric', 'min:0'],
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            if ($validator->errors()->any()) {
+                return;
+            }
+
+            $package = Package::find($this->package_id);
+
+            if (! $package) {
+                return;
+            }
+
+            $expectedAmount = $package->price * $this->quantity;
+
+            if ((float) $this->amount !== (float) $expectedAmount) {
+                $validator->errors()->add(
+                    'amount',
+                    "Amount must be ৳{$expectedAmount} for {$this->quantity} ticket(s)."
+                );
+            }
+        });
     }
 }

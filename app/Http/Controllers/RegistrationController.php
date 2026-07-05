@@ -28,6 +28,7 @@ class RegistrationController extends Controller
         return inertia('Register', [
             'event' => $event,
             'paymentMethods' => $paymentMethods,
+            'maxQuantity' => 6,
         ]);
     }
 
@@ -47,9 +48,9 @@ class RegistrationController extends Controller
                 $taken = Registration::where('event_id', $event->id)
                     ->where('seat_position', $validated['seat_position'])
                     ->where('payment_status', '!=', PaymentStatus::Rejected->value)
-                    ->count();
+                    ->sum('quantity');
 
-                if ($taken >= $event->$capacityField) {
+                if (($taken + $validated['quantity']) > $event->$capacityField) {
                     throw ValidationException::withMessages([
                         'seat_position' => 'That section is full — please choose the other position.',
                     ]);

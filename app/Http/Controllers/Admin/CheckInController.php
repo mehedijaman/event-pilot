@@ -30,8 +30,9 @@ class CheckInController extends Controller
                 'seat_position' => $registration->seat_position->value,
                 'payment_status' => $registration->payment_status->value,
                 'checked_in_at' => $registration->checked_in_at,
+                'quantity' => $registration->quantity,
                 'event' => ['name' => $registration->event->name],
-                'package' => ['name' => $registration->package->name],
+                'package' => ['name' => $registration->package->name, 'price' => $registration->package->price],
             ] : null,
         ]);
     }

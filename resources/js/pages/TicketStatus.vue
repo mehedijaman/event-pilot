@@ -12,6 +12,7 @@ defineProps<{
         payment_method: string;
         transaction_id: string;
         amount: number;
+        quantity: number;
         payment_status: string;
         rejection_reason: string | null;
         created_at: string;
@@ -98,6 +99,11 @@ function statusColor(status: string): string {
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-[#706f6c] dark:text-[#A1A09A]">Package</span>
                         <span class="text-sm font-medium">{{ registration.package.name }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-[#706f6c] dark:text-[#A1A09A]">Quantity</span>
+                        <span class="text-sm">{{ registration.quantity }}</span>
                     </div>
 
                     <div class="flex items-center justify-between">

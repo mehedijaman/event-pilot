@@ -25,7 +25,10 @@
             <dd>{{ $registration->name }}</dd>
 
             <dt>Package</dt>
-            <dd>{{ $registration->package->name }} — ৳{{ number_format($registration->amount, 2) }}</dd>
+            <dd>{{ $registration->package->name }} — ৳{{ number_format($registration->package->price, 2) }} × {{ $registration->quantity }}</dd>
+
+            <dt>Amount Paid</dt>
+            <dd>৳{{ number_format($registration->amount, 2) }}</dd>
 
             <dt>Seat</dt>
             <dd style="text-transform: capitalize">{{ $registration->seat_position->value }}</dd>
